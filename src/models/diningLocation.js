@@ -1,7 +1,11 @@
 export class DiningLocation {
-    constructor(name, hours) {
+    constructor(name) {
         this.name = name;
-        this.hours = hours;
+        this.hours = []
+    }
+
+    addHours(hours) {
+        this.hours.push(hours)
     }
 }
 

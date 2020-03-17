@@ -1,18 +1,37 @@
-const diningURL = 'https://apps.studentaffairs.cmu.edu/dining/conceptinfo/?page=listConcepts';
+const request = require('request');
+const cheerio = require('cheerio');
+import { DiningLocation, Hours } from '../models/diningLocation';
 
+const diningURL = 'https://apps.studentaffairs.cmu.edu/dining/conceptinfo/?page=listConceptsGrid';
 
-function parseBody(body) {
-    request({
-        uri: diningURL
-    }, (err, res, body) => {
-        parseBody(body);
-    });
-    let $ = cheerio.load(body);
-    // Names
-    let heads = $('.item', '#conceptColumn').html();
-    console.log(heads);
+async function getContents() {
+    return new Promise(function(resolve, reject) {
+        request.get({url: diningURL, method: 'GET'}, function(err, resp, body) {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(body);
+            }
+        });
+    })
 }
 
-export const getDiningTimes = (req, res) => {
-    
+function parseContents(html) {
+    let $ = cheerio.load(html);
+    // Names
+    let locations = [];
+    let heads = $('.item a ', '#conceptColumn').each((i, element) => {
+        let name = element.children[0].data;
+        let location = new DiningLocation(name);
+        locations.push(location);
+    });
+    console.log(locations);
+    return locations;
+}
+
+export const getDiningTimes = async (req, res) => {
+    let html = await getContents();
+    console.log("Got html");
+    parseContents(html);
+    res.write("Done");
 }
