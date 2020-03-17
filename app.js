@@ -5,21 +5,7 @@ import bodyParser from 'body-parser';
 import routes from './src/routes/routes';
 
 const app = express();
-
-const diningURL = 'https://apps.studentaffairs.cmu.edu/dining/conceptinfo/?page=listConcepts';
-
-request({
-    uri: diningURL
-}, (err, res, body) => {
-    parseBody(body);
-});
-
-function parseBody(body) {
-    let $ = cheerio.load(body);
-    // Names
-    let heads = $('.item', '#conceptColumn').html();
-    console.log(heads);
-}
+const port = 3000;
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -27,7 +13,7 @@ app.use(bodyParser.json());
 routes(app);
 
 app.get("/", function(req, res) {
-    res.send("ScottyLabs CourseAPI Homepage");
+    res.send("ScottyLabs DiningAPI Homepage");
 });
 
 app.listen(port, () =>

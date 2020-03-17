@@ -1,8 +1,8 @@
+import { getDiningTimes } from '../controllers/diningController';
+
 const routes = (app) => {
     app.route('/locations')
-        .get((req, res) => {
-            res.send(req);
-        })
+        .get(getDiningTimes);
 }
 
 export default routes;
